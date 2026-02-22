@@ -90,6 +90,7 @@ const CloseButton = () => {
       onClicked={(btn?: Gtk.Widget) => {
         const root = btn?.get_root()
         if (root && root instanceof Gtk.Window) root.destroy()
+        execAsync(['ags', 'quit'])
       }}
     >
       <image iconName="close-symbolic" pixelSize={18} />
