@@ -9,7 +9,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+
+      - name: Checkout
+        uses: actions/checkout@v5
 
       - name: Build binaries
         run: docker build -t movies .
+
+      - name: Copy binaries
+        run: |
+          BIN_FOLDER=/usr/local/bin/
+          CONTAINER_ID=$(docker create movies)
+          docker cp $CONTAINER_ID:$BIN_FOLDER/movies-scrape movies-scrape
+          docker cp $CONTAINER_ID:$BIN_FOLDER/movies-fill movies-fill
+          docker cp $CONTAINER_ID:$BIN_FOLDER/display-movies-widget display-movies-widget
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            movies-scrape
+            movies-fill
+            display-movies-widget
