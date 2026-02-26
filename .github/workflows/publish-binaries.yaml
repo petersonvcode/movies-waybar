@@ -18,7 +18,7 @@ jobs:
 
       - name: Copy binaries
         run: |
-          BIN_FOLDER=/usr/local/bin/
+          BIN_FOLDER=/usr/local/bin
           CONTAINER_ID=$(docker create movies)
           docker cp $CONTAINER_ID:$BIN_FOLDER/movies-scrape movies-scrape
           docker cp $CONTAINER_ID:$BIN_FOLDER/movies-fill movies-fill
