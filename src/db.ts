@@ -1,6 +1,7 @@
 import db, { type Database } from 'better-sqlite3'
 import type { ScrappedMovie } from './scrapeMoviesList.js'
 import type { MovieDetails } from './fillMovieDetails.js';
+import { getConfig } from './config.js';
 
 type ScrappedMovieRow = {
   id: string;
@@ -16,12 +17,10 @@ type ScrappedMovieRow = {
   description: string;
 }
 
-const dbFile = './movies.db'
 let client: Database | null = null
-
 const getClient = (): Database => {
   if (!client) {
-    client = db(dbFile)
+    client = db(getConfig().dbFile)
     initializeDatabase(client)
   }
   return client

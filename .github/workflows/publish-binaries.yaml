@@ -26,9 +26,22 @@ jobs:
           docker cp $CONTAINER_ID:$BIN_FOLDER/movies-fill movies-fill
           docker cp $CONTAINER_ID:$BIN_FOLDER/display-movies-widget display-movies-widget
 
-      - name: Release
+      - name: Release (versioned)
         uses: softprops/action-gh-release@v2
         with:
+          files: |
+            movies-scrape
+            movies-fill
+            display-movies-widget
+
+      - name: Update latest tag
+        run: git push origin ${GITHUB_SHA}:refs/tags/latest --force
+
+      - name: Release (latest)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest
           files: |
             movies-scrape
             movies-fill

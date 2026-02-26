@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { chromium, type Browser, type BrowserContext, type Locator, type Page } from 'playwright';
-import fs from 'fs';
 import { insertMovies } from './db.js';
 
 export type ScrappedMovie = {

@@ -6,14 +6,8 @@ import { createComputed, createState, With } from "ags"
 import Adw from "gi://Adw"
 import Pango from "gi://Pango?version=1.0"
 import Gio from "gi://Gio"
-
-
-const waylandBarHeight = 26
-const waylandBarMargin = 4
-// TODO: make this dynamic based on input
-const dynamicRightMargin = 128
-
-const pollInterval = 30 * 60 * 1000 // 30 minutes
+import GLib from "gi://GLib"
+import { getConfig } from "./config"
 
 const goldenRatio = 1.61803398875
 const width = 400
@@ -38,7 +32,12 @@ export type MovieDetails = {
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-  const rawMoviesJson = createPoll("", pollInterval, `bash -c ". ${projectPath}/bin/get-waybar-content.sh"`)
+  const rawConfigPath = '~/.config/movies-cwb-ags-bar/config.json'
+  const expandedPath = rawConfigPath.replace(/^~(?=\/|$)/, GLib.get_home_dir())
+  const absoluteConfigPath = exec(['realpath', expandedPath])
+  const config = getConfig(absoluteConfigPath)
+
+  const rawMoviesJson = createPoll("", config.barPollInterval * 60 * 1000, `bash -c ". ${projectPath}/bin/get-waybar-content.sh"`)
   return (
     <window
       class="window"
@@ -46,8 +45,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
       anchor={Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.TOP}
-      marginTop={waylandBarHeight + waylandBarMargin}
-      marginRight={dynamicRightMargin}
+      marginTop={config.barTopMargin}
+      marginRight={config.barRightMargin}
       application={app}
     >
       <With value={rawMoviesJson}>
@@ -93,7 +92,7 @@ const CloseButton = () => {
         execAsync(['ags', 'quit'])
       }}
     >
-      <image iconName="close-symbolic" pixelSize={18} />
+      <image file={`${SRC}/icons/hicolor/scalable/actions/close-icon.svg`} pixelSize={23} />
     </button>
   )
 }
@@ -196,12 +195,11 @@ const MovieCard = ({ movie }: { movie: MovieDetails }) => {
             </box>
             <button
               class="movie-more-info-button"
-              iconName="info-symbolic"
               cursor={Gdk.Cursor.new_from_name('pointer', null)}
               onClicked={() => execAsync(['xdg-open', movie.more_info_url])}
               halign={Gtk.Align.START}
             >
-              <image iconName="info-symbolic" pixelSize={18} />
+              <image file={`${SRC}/icons/hicolor/scalable/actions/info-icon.svg`} pixelSize={22} />
             </button>
           </box>
           <MovieImage movie={movie} cardHeight={cardHeight} rightSize={rightSize} />
