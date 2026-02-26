@@ -5,7 +5,7 @@ import Bar from "./widget/Bar"
 
 app.start({
   css: style,
-  icons: './icons',
+  icons: '${SRC}/icons',
   main() {
     app.get_monitors().map(Bar)
   },

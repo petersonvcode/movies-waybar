@@ -6,3 +6,4 @@ movies.db
 .env
 .tmp
 movies.jsons
+.last_update_date
