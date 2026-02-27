@@ -15,7 +15,7 @@ check_dependencies() {
     return 1
   fi
 
-  pacman -Q aylurs-gtk-shell-git
+  pacman -Q aylurs-gtk-shell-git &>/dev/null
   if [ $? -ne 0 ]; then
     echo "The package aylurs-gtk-shell-git is not installed. Please install with: sudo pacman -Syu aylurs-gtk-shell-git"
     return 1
@@ -31,12 +31,14 @@ download_files() {
   }
 
 install() {
-  mv ${TMP_DIR}/movies-scrape ${BIN_DIR}/movies-scrape
-  mv ${TMP_DIR}/movies-fill ${BIN_DIR}/movies-fill
-  mv ${TMP_DIR}/display-movies-widget ${BIN_DIR}/display-movies-widget
+  sudo mv ${TMP_DIR}/movies-scrape ${BIN_DIR}/movies-scrape
+  sudo mv ${TMP_DIR}/movies-fill ${BIN_DIR}/movies-fill
+  sudo mv ${TMP_DIR}/display-movies-widget ${BIN_DIR}/display-movies-widget
+  sudo mkdir -p /usr/share/movies-cwb-ags-bar
+  sudo cp -r ${TMP_DIR}/icons /usr/share/movies-cwb-ags-bar/
 
   ${TMP_DIR}/bin/config.sh
-  cp -r ${TMP_DIR}/bin ${BIN_DIR}/bin
+  cp -r ${TMP_DIR}/bin ~/.config/movies-cwb-ags-bar/bin
 }
 
 check_dependencies

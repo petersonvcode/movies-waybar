@@ -25,9 +25,10 @@ jobs:
           docker cp $CONTAINER_ID:$BIN_FOLDER/movies-scrape movies-scrape
           docker cp $CONTAINER_ID:$BIN_FOLDER/movies-fill movies-fill
           docker cp $CONTAINER_ID:$BIN_FOLDER/display-movies-widget display-movies-widget
+          docker cp $CONTAINER_ID:$BIN_FOLDER/icons icons
 
       - name: Bundle
-        run: zip -r movies-cwb-arch-x64.zip movies-scrape movies-fill display-movies-widget bin/*
+        run: zip -r movies-cwb-arch-x64.zip movies-scrape movies-fill display-movies-widget icons bin/*
 
       - name: Release (versioned)
         uses: softprops/action-gh-release@v2

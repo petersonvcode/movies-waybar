@@ -64,16 +64,16 @@ COPY ags/env.d.ts .
 COPY ags/style.scss .
 COPY ags/tsconfig.json .
 
-RUN ags bundle app.ts display-movies-widget
+RUN ags bundle app.ts display-movies-widget -d "SRC='/usr/share/movies-cwb-ags-bar'"
 
 # Docker image to hold the binaries
-# Use ags-bar-arch for Arch hosts; use ags-bar for Debian/Ubuntu hosts.
 FROM alpine AS binaries
 
 RUN mkdir -p /binaries
 COPY --from=build /app/dist/movies-scrape /binaries/movies-scrape
 COPY --from=build /app/dist/movies-fill /binaries/movies-fill
 COPY --from=ags-bar-arch /app/display-movies-widget /binaries/display-movies-widget
+COPY --from=ags-bar-arch /app/icons /binaries/icons
 
 # This is a dummy entrypoint to keep the container running
 # while the binaries are being copied
